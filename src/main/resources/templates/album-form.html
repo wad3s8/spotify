@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Добавить альбом</title>
+</head>
+<body>
+<h1>Добавить альбом</h1>
+<form th:action="@{/albums/add}" th:object="${album}" method="post">
+  Название альбома: <input type="text" th:field="*{title}" required/><br/>
+  Дата релиза: <input type="date" th:field="*{releaseDate}" required/><br/>
+
+  <label>Исполнитель:</label>
+  <select th:field="*{artist}" required>
+    <option th:each="artist : ${artists}"
+            th:value="${artist.id}"
+            th:text="${artist.name}"/>
+  </select><br/>
+
+  <button type="submit">Сохранить</button>
+</form>
+</body>
+</html>

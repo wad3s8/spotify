@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Все треки</title>
+</head>
+<body>
+<h1>Список треков</h1>
+<a href="/tracks/add">Добавить трек</a>
+<ul>
+    <li th:each="track : ${tracks}">
+        <b th:text="${track.title}">Название</b> —
+        <span th:text="${track.artist}">Исполнитель</span>
+        (<span th:text="${track.genre}">Жанр</span>)
+        <a th:href="@{'/tracks/delete/' + ${track.id}}">Удалить</a>
+    </li>
+</ul>
+</body>
+</html>

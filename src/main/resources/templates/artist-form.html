@@ -1,0 +1,5 @@
+<form th:action="@{/artists/add}" th:object="${artist}" method="post">
+    <label>Имя исполнителя:</label>
+    <input type="text" th:field="*{name}" required/>
+    <button type="submit">Сохранить</button>
+</form>

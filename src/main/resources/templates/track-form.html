@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Добавить трек</title>
+</head>
+<body>
+<h1>Добавление трека</h1>
+
+<form th:action="@{/tracks/add}" th:object="${track}" method="post">
+
+    Название: <input type="text" th:field="*{title}" required/><br/>
+
+    <label>Исполнитель:</label>
+    <select th:field="*{artist}" required>
+        <option th:each="artist : ${artists}"
+                th:value="${artist.id}"
+                th:text="${artist.name}"/>
+    </select><br/>
+
+    <label>Альбом:</label>
+    <select th:field="*{album}" required>
+        <option th:each="album : ${albums}"
+                th:value="${album.id}"
+                th:text="${album.title}"/>
+    </select><br/>
+
+    Жанр: <input type="text" th:field="*{genre}" /><br/>
+    Длительность (сек): <input type="number" th:field="*{durationInSeconds}" /><br/>
+    Дата релиза: <input type="date" th:field="*{releaseDate}" /><br/>
+
+    <button type="submit">Сохранить</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Альбомы</title>
+</head>
+<body>
+<h1>Список альбомов</h1>
+<a href="/albums/add">➕ Добавить альбом</a>
+<ul>
+  <li th:each="album : ${albums}">
+    <b th:text="${album.title}">Название</b>,
+    <span th:text="${album.artist.name}">Исполнитель</span>,
+    <span th:text="${album.releaseDate}">Дата</span>
+  </li>
+</ul>
+</body>
+</html>
