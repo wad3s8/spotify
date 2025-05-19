@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Плейлисты</title>
+</head>
+<body>
+<h1>Список плейлистов</h1>
+<a href="/playlists/add">➕ Добавить плейлист</a>
+<ul>
+  <li th:each="playlist : ${playlists}">
+    <b th:text="${playlist.title}">Название</b>
+    <ul>
+      <li th:each="track : ${playlist.tracks}">
+        <span th:text="${track.title}">Трек</span>
+      </li>
+    </ul>
+    <a th:href="@{'/playlists/delete/' + ${playlist.id}}">Удалить</a>
+  </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Создать плейлист</title>
+</head>
+<body>
+<h1>Создать плейлист</h1>
+
+<form th:action="@{/playlists/add}" th:object="${playlist}" method="post">
+  Название: <input type="text" th:field="*{title}" required/><br/>
+  <label>Выберите треки:</label><br/>
+  <div th:each="track : ${tracks}">
+    <input type="checkbox" name="trackIds" th:value="${track.id}"/>
+    <span th:text="${track.title}">Трек</span><br/>
+  </div>
+  <button type="submit">Сохранить</button>
+</form>
+
+</body>
+</html>

@@ -25,5 +25,6 @@ public class Album {
     private Artist artist;
 
     @OneToMany(mappedBy = "album")
+    @ToString.Exclude
     private List<Track> tracks;
 }
