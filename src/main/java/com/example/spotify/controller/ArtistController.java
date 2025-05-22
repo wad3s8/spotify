@@ -13,10 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/artists")
 @RequiredArgsConstructor
-
 public class ArtistController {
 
     private final ArtistRepository artistRepository;
+
+    @GetMapping
+    public String listArtists(Model model) {
+        model.addAttribute("artists", artistRepository.findAll());
+        return "artist-list";
+    }
 
     @GetMapping("/add")
     public String showArtistForm(Model model) {
@@ -27,6 +32,7 @@ public class ArtistController {
     @PostMapping("/add")
     public String saveArtist(@ModelAttribute Artist artist) {
         artistRepository.save(artist);
-        return "redirect:/tracks/add";
+        return "redirect:/artists"; // Можно возвращать на список
     }
 }
+

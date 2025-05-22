@@ -72,21 +72,23 @@ public class FileSystemStorageService implements StorageService {
 	@Override
 	public Resource loadAsResource(String filename) {
 		try {
+			if (filename == null) {
+				throw new StorageFileNotFoundException("Файл не указан (null).");
+			}
+
 			Path file = load(filename);
 			Resource resource = new UrlResource(file.toUri());
-			if (resource.exists() || resource.isReadable()) {
-				return resource;
-			}
-			else {
-				throw new StorageFileNotFoundException(
-						"Could not read file: " + filename);
 
+			if (resource.exists() && resource.isReadable()) {
+				return resource;
+			} else {
+				throw new StorageFileNotFoundException("Файл не найден или не читаем: " + filename);
 			}
-		}
-		catch (MalformedURLException e) {
-			throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+		} catch (MalformedURLException e) {
+			throw new StorageFileNotFoundException("Ошибка загрузки файла: " + filename, e);
 		}
 	}
+
 
 	@Override
 	public void deleteAll() {
