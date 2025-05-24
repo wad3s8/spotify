@@ -1,4 +1,6 @@
 package com.example.spotify.controller;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import com.example.spotify.entity.Track;
 import com.example.spotify.entity.User;
@@ -64,7 +66,7 @@ public class TrackController {
     }
 
     @PostMapping("/add")
-    public String addTrack(@ModelAttribute Track track,
+    public String addTrack(@Valid @ModelAttribute Track track,
                            @RequestParam("file") MultipartFile file,
                            @AuthenticationPrincipal UserDetails userDetails,
                            Model model) {

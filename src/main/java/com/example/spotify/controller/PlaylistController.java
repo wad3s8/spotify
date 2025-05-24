@@ -4,6 +4,7 @@ import com.example.spotify.entity.Playlist;
 import com.example.spotify.entity.Track;
 import com.example.spotify.repository.PlaylistRepository;
 import com.example.spotify.repository.TrackRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +36,7 @@ public class PlaylistController {
     }
 
     @PostMapping("/add")
-    public String addPlaylist(@ModelAttribute Playlist playlist,
+    public String addPlaylist(@Valid @ModelAttribute Playlist playlist,
                               @RequestParam List<Long> trackIds) {
         List<Track> tracks = trackRepository.findAllById(trackIds);
         playlist.setTracks(tracks);

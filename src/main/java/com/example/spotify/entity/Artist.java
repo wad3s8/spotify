@@ -1,6 +1,7 @@
 package com.example.spotify.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class Artist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "artist.name.required")
     private String name;
 
     @OneToMany(mappedBy = "artist")

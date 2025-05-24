@@ -2,6 +2,7 @@ package com.example.spotify.controller;
 
 import com.example.spotify.entity.Artist;
 import com.example.spotify.repository.ArtistRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +31,7 @@ public class ArtistController {
     }
 
     @PostMapping("/add")
-    public String saveArtist(@ModelAttribute Artist artist) {
+    public String saveArtist(@Valid @ModelAttribute Artist artist) {
         artistRepository.save(artist);
         return "redirect:/artists"; // Можно возвращать на список
     }

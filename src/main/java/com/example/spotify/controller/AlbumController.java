@@ -3,6 +3,7 @@ package com.example.spotify.controller;
 import com.example.spotify.entity.Album;
 import com.example.spotify.repository.AlbumRepository;
 import com.example.spotify.repository.ArtistRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +31,7 @@ public class AlbumController {
     }
 
     @PostMapping("/add")
-    public String addAlbum(@ModelAttribute Album album) {
+    public String addAlbum(@Valid @ModelAttribute Album album) {
         albumRepository.save(album);
         return "redirect:/albums";
     }
