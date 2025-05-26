@@ -55,15 +55,7 @@ public class TrackController {
         return "track-form";
     }
 
-    @GetMapping("/play/{id}")
-    @ResponseBody
-    public ResponseEntity<Resource> playTrack(@PathVariable Long id) {
-        Track track = trackService.getById(id); // добавь метод в TrackService, если его нет
-        Resource file = storageService.loadAsResource(track.getFilePath());
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFilename() + "\"")
-                .body(file);
-    }
+
 
     @PostMapping("/add")
     public String addTrack(@Valid @ModelAttribute Track track,
@@ -77,8 +69,12 @@ public class TrackController {
         track.setCreatedBy(currentUser);
 
         try {
-            String filename = storageService.store(file);
-            track.setFilePath(filename);
+            String originalFilename = file.getOriginalFilename(); // "wer.mp3"
+            String filename = storageService.store(file); // уже "wer.mp3"
+
+            track.setFilePath(filename); // 👈 всё! не добавляй расширение повторно
+
+
         } catch (StorageException e) {
             e.printStackTrace();
             model.addAttribute("error", "Ошибка загрузки файла: " + e.getMessage());

@@ -1,9 +1,16 @@
 spring:
+  config:
+    activate:
+      on-profile: prod
+
   datasource:
-    url: jdbc:postgresql://prod-db-host:5432/spotify_prod
+    url: jdbc:postgresql://prod-server:5432/spotify_db
     username: prod_user
-    password: prod_password
+    password: strong-password
     driver-class-name: org.postgresql.Driver
+
+  thymeleaf:
+    cache: true
 
   jpa:
     hibernate:

@@ -16,6 +16,7 @@
                 <li class="nav-item"><a class="nav-link" href="/albums">Альбомы</a></li>
                 <li class="nav-item"><a class="nav-link" href="/artists">Исполнители</a></li>
                 <li class="nav-item"><a class="nav-link" href="/playlists">Плейлисты</a></li>
+                <li class="nav-item"><a class="nav-link text-warning" href="/favorites">❤️ Любимое</a></li>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="/logout">Выход</a></li>
@@ -32,17 +33,42 @@
 
     <ul class="list-group">
         <li class="list-group-item" th:each="track : ${tracks}">
-            <div>
+            <div class="position-relative">
                 <b th:text="${track.title}">Название</b> —
                 <span th:text="${track.artist.name}">Исполнитель</span>
                 (<span th:text="${track.genre}">Жанр</span>)<br>
                 <span><strong>Альбом:</strong> <span th:text="${track.album.title}">Альбом</span></span><br>
-                <audio class="w-100 mt-2" controls th:src="@{'/tracks/play/' + ${track.id}}"></audio>
+
+                <!-- Аудио без скачивания и изменения скорости -->
+                <audio class="w-100 mt-2"
+                       controls
+                       controlsList="nodownload noplaybackrate"
+                       th:src="@{'/api/tracks/play/' + ${track.id}}">
+                </audio>
+
+                <!-- Меню ⋮ -->
+                <div class="dropdown position-absolute top-0 end-0 mt-1 me-1">
+                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="dropdown">⋮</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li class="dropdown-header">Добавить в плейлист</li>
+                        <li th:each="playlist : ${playlists}">
+                            <form th:action="@{/playlists/add-track}" method="post" class="m-0">
+                                <input type="hidden" name="trackId" th:value="${track.id}" />
+                                <input type="hidden" name="playlistId" th:value="${playlist.id}" />
+                                <button type="submit" class="dropdown-item" th:text="${playlist.title}"></button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Кнопка удаления -->
                 <a class="btn btn-sm btn-outline-danger mt-2" th:href="@{'/tracks/delete/' + ${track.id}}">Удалить</a>
             </div>
         </li>
     </ul>
 </div>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

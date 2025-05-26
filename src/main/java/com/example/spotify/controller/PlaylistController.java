@@ -35,6 +35,26 @@ public class PlaylistController {
         return "playlist-form";
     }
 
+    @PostMapping("/{playlistId}/add-track/{trackId}")
+    public String addTrackToPlaylist(
+            @PathVariable Long playlistId,
+            @PathVariable Long trackId
+    ) {
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new IllegalArgumentException("Плейлист не найден"));
+
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new IllegalArgumentException("Трек не найден"));
+
+        if (!playlist.getTracks().contains(track)) {
+            playlist.getTracks().add(track);
+            playlistRepository.save(playlist);
+        }
+
+        return "redirect:/playlists/" + playlistId; // или куда нужно
+    }
+
+
     @PostMapping("/add")
     public String addPlaylist(@Valid @ModelAttribute Playlist playlist,
                               @RequestParam List<Long> trackIds) {
