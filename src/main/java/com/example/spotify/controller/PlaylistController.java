@@ -2,10 +2,14 @@ package com.example.spotify.controller;
 
 import com.example.spotify.entity.Playlist;
 import com.example.spotify.entity.Track;
+import com.example.spotify.entity.User;
 import com.example.spotify.repository.PlaylistRepository;
 import com.example.spotify.repository.TrackRepository;
+import com.example.spotify.repository.UserRepository;
+import com.example.spotify.security.CustomUserDetails;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +26,19 @@ public class PlaylistController {
     @Autowired
     private TrackRepository trackRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping
-    public String listPlaylists(Model model) {
-        model.addAttribute("playlists", playlistRepository.findAll());
+    public String listPlaylists(Model model,
+                                @AuthenticationPrincipal CustomUserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+
+        model.addAttribute("playlists", playlistRepository.findByOwner(user));
         return "playlist-list";
     }
+
 
     @GetMapping("/add")
     public String showAddForm(Model model) {

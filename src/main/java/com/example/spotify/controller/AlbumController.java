@@ -30,6 +30,15 @@ public class AlbumController {
         return "album-form";
     }
 
+    @GetMapping("/{id}")
+    public String showAlbumDetails(@PathVariable Long id, Model model) {
+        Album album = albumRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid album ID: " + id));
+        model.addAttribute("album", album);
+        model.addAttribute("tracks", album.getTracks());
+        return "album-details"; // Создадим этот шаблон
+    }
+
     @PostMapping("/add")
     public String addAlbum(@Valid @ModelAttribute Album album) {
         albumRepository.save(album);

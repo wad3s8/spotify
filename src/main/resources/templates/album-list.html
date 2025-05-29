@@ -32,9 +32,14 @@
   </div>
 
   <ul class="list-group">
-    <li class="list-group-item" th:each="album : ${albums}">
+    <li class="list-group-item list-group-item-action"
+        th:each="album : ${albums}"
+        th:if="${album != null}"
+        th:href="@{'/albums/' + ${album.id}}"
+        style="cursor: pointer"
+        onclick="location.href=this.getAttribute('href')">
       <strong th:text="${album.title}">Название</strong>,
-      <span th:text="${album.artist.name}">Исполнитель</span>,
+      <span th:text="${album.artist != null ? album.artist.name : 'Без исполнителя'}">Исполнитель</span>,
       <span th:text="${album.releaseDate}">Дата</span>
     </li>
   </ul>

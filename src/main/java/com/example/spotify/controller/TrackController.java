@@ -1,4 +1,6 @@
 package com.example.spotify.controller;
+import com.example.spotify.entity.Playlist;
+import com.example.spotify.repository.PlaylistRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -22,6 +24,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/tracks")
 public class TrackController {
@@ -41,9 +45,18 @@ public class TrackController {
     @Autowired
     private StorageService storageService;
 
+    @Autowired
+    private PlaylistRepository playlistRepository;
+
     @GetMapping
-    public String showAllTracks(Model model) {
+    public String showAllTracks(Model model, @AuthenticationPrincipal com.example.spotify.security.CustomUserDetails userDetails) {
         model.addAttribute("tracks", trackService.getAllTracks());
+        com.example.spotify.entity.User user = userRepository
+                .findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Playlist> playlists = playlistRepository.findByOwner(user);
+        model.addAttribute("playlists", playlists);
         return "track-list";
     }
 

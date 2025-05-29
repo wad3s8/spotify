@@ -30,14 +30,12 @@ public class HomeController {
 
         model.addAttribute("tracks", trackRepository.findAll());
 
-        // Получаем пользователя
         com.example.spotify.entity.User user = userRepository
                 .findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Получаем плейлисты пользователя
         List<Playlist> playlists = playlistRepository.findByOwner(user);
-        model.addAttribute("playlists", playlists); // 💥 Обязательно!
+        model.addAttribute("playlists", playlists);
 
         return "index";
     }
