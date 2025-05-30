@@ -1,9 +1,10 @@
 package com.example.spotify.controller;
 import com.example.spotify.entity.Playlist;
 import com.example.spotify.repository.PlaylistRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import com.example.spotify.entity.Track;
 import com.example.spotify.entity.User;
 import com.example.spotify.repository.ArtistRepository;
@@ -13,18 +14,17 @@ import com.example.spotify.storage.StorageService;
 import com.example.spotify.service.TrackService;
 import com.example.spotify.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/tracks")
@@ -49,16 +49,34 @@ public class TrackController {
     private PlaylistRepository playlistRepository;
 
     @GetMapping
-    public String showAllTracks(Model model, @AuthenticationPrincipal com.example.spotify.security.CustomUserDetails userDetails) {
-        model.addAttribute("tracks", trackService.getAllTracks());
+    public String showAllTracks(HttpServletRequest request, Model model,
+                                @AuthenticationPrincipal com.example.spotify.security.CustomUserDetails userDetails) throws JsonProcessingException {
+        model.addAttribute("currentUrl", request.getRequestURI());
+        List<Track> tracks = trackService.getAllTracks();
+        model.addAttribute("tracks", tracks);
+
         com.example.spotify.entity.User user = userRepository
                 .findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<Playlist> playlists = playlistRepository.findByOwner(user);
         model.addAttribute("playlists", playlists);
+
+        List<Map<String, String>> trackList = tracks.stream().map(track -> {
+            Map<String, String> m = new HashMap<>();
+            m.put("title", track.getTitle());
+            m.put("artist", track.getArtist().getName());
+            m.put("url", "/api/tracks/play/" + track.getId());
+            return m;
+        }).toList();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String playlistJSON = mapper.writeValueAsString(trackList);
+        model.addAttribute("playlistJSON", playlistJSON);
+
         return "track-list";
     }
+
 
     @GetMapping("/add")
     public String showAddForm(Model model) {

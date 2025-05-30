@@ -50,7 +50,8 @@ public class PlaylistController {
     @PostMapping("/{playlistId}/add-track/{trackId}")
     public String addTrackToPlaylist(
             @PathVariable Long playlistId,
-            @PathVariable Long trackId
+            @PathVariable Long trackId,
+            @RequestParam(required = false) String redirect
     ) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new IllegalArgumentException("Плейлист не найден"));
@@ -63,8 +64,13 @@ public class PlaylistController {
             playlistRepository.save(playlist);
         }
 
-        return "redirect:/playlists/" + playlistId; // или куда нужно
+        if (redirect != null && !redirect.isBlank()) {
+            return "redirect:" + redirect;
+        }
+
+        return "redirect:/tracks";
     }
+
 
 
     @PostMapping("/add")

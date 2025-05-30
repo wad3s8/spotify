@@ -30,7 +30,6 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userRepository.save(user);
 
-        // Создание плейлиста "Любимое"
         Playlist favorite = Playlist.builder()
                 .title("Любимое")
                 .owner(savedUser)

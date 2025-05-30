@@ -1,0 +1,58 @@
+<div th:fragment="player">
+    <div id="footer-player"
+         class="bg-dark text-white p-3 fixed-bottom d-flex align-items-center justify-content-between"
+         style="z-index: 9999;">
+
+        <div id="current-track-info" class="ms-3">
+            <strong id="track-title">🎵 Нет трека</strong><br>
+            <small id="track-artist">Исполнитель</small>
+        </div>
+        <audio id="audio-player" controls class="me-3" style="width: 300px;">
+            Ваш браузер не поддерживает аудио.
+        </audio>
+    </div>
+
+    <script>
+        let playlist = [];
+        let currentTrackIndex = 0;
+
+        function playTrack(track) {
+            console.log("Воспроизведение:", track);
+
+            const player = document.getElementById("audio-player");
+
+            document.getElementById("track-title").textContent = track.title;
+            document.getElementById("track-artist").textContent = track.artist;
+
+            player.pause();
+            player.src = track.url;
+            player.load();
+
+            player.oncanplay = () => {
+                player.play().catch(err => {
+                    console.error("Ошибка воспроизведения:", err);
+                });
+            };
+        }
+
+
+
+        function setPlaylist(newPlaylist, startIndex = 0) {
+            playlist = newPlaylist;
+            currentTrackIndex = startIndex;
+            playTrack(playlist[currentTrackIndex]);
+        }
+
+        function nextTrack() {
+            if (currentTrackIndex + 1 < playlist.length) {
+                currentTrackIndex++;
+                playTrack(playlist[currentTrackIndex]);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("audio-player")
+                .addEventListener("ended", nextTrack);
+        });
+    </script>
+</div>

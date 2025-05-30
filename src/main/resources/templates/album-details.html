@@ -7,6 +7,7 @@
 </head>
 <body class="bg-light">
 
+<!-- Навигация -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">🎵 Spotify by wad3s</a>
@@ -25,11 +26,18 @@
     </div>
 </nav>
 
+<!-- Контент альбома -->
 <div class="container mt-4">
     <h1 th:text="${album.title}">Название</h1>
     <p>Исполнитель: <span th:text="${album.artist.name}">Исполнитель</span></p>
     <p>Дата выхода: <span th:text="${album.releaseDate}">Дата</span></p>
 
+    <!-- Кнопка запуска альбома -->
+    <button class="btn btn-success mb-3" id="play-album-button" th:attr="data-playlist=${playlistJSON}">
+        ▶️ Играть альбом
+    </button>
+
+    <!-- Список треков -->
     <h2>Треки:</h2>
     <ul class="list-group">
         <li class="list-group-item" th:each="track : ${tracks}" th:text="${track.title}">Трек</li>
@@ -37,5 +45,13 @@
 
     <a class="btn btn-secondary mt-3" href="/albums">← Назад</a>
 </div>
+
+<!-- Глобальный плеер -->
+<th:block th:replace="~{fragments/footer-player :: player}"></th:block>
+
+
+<!-- JS обработка кнопки -->
+<script src="/js/album-player.js"></script>
+
 </body>
 </html>
